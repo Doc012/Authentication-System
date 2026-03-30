@@ -4,6 +4,7 @@ import backend.security.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -34,7 +35,10 @@ public class SecurityConfig {
                         ).permitAll()
 
                         // Only DEVELOPERS can create apps
-                        .requestMatchers("/applications").hasRole("DEVELOPER")
+                        .requestMatchers(HttpMethod.POST, "/applications/**").hasRole("DEVELOPER")
+                        .requestMatchers(HttpMethod.GET, "/applications/**").hasRole("DEVELOPER")
+                        .requestMatchers(HttpMethod.PUT, "/applications/**").hasRole("DEVELOPER")
+                        .requestMatchers(HttpMethod.DELETE, "/applications/**").hasRole("DEVELOPER")
 
                         // Admin-only endpoints (future)
                         .requestMatchers("/admin/**").hasRole("ADMIN")
