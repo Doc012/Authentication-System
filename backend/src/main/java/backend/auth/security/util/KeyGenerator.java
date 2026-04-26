@@ -1,4 +1,4 @@
-package backend.security.util;
+package backend.auth.security.util;
 
 import java.security.SecureRandom;
 import java.util.Base64;

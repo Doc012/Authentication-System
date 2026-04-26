@@ -4,7 +4,7 @@ import backend.application.entity.Application;
 import backend.application.repository.ApplicationRepository;
 import backend.developer.entity.Developer;
 import backend.developer.repository.DeveloperRepository;
-import backend.security.util.KeyGenerator;
+import backend.auth.security.util.KeyGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;

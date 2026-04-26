@@ -4,12 +4,14 @@ import backend.application.entity.Application;
 import backend.application.repository.ApplicationRepository;
 import backend.auth.user.entity.User;
 import backend.auth.user.repository.UserRepository;
-import backend.security.jwt.JwtService;
+import backend.auth.security.jwt.JwtService;
+import backend.developer.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +27,25 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("Invalid API Key"));
 
         // 2. Checking if user already exists in this app
-        if (userRepository.existsByEmailAndApplicationId(email, app.getId())){
+        Optional<User> existingUser =
+                userRepository.findByEmailAndApplicationId(email, app.getId());
+
+        if (existingUser.isPresent()){
+            User user = existingUser.get();
+
+            // Linking Local Login
+            if (user.getPasswordHash() == null){
+                user.setPasswordHash(passwordEncoder.encode(password));
+
+                if ("GOOGLE".equals(user.getProvider())){
+                    user.setProvider("BOTH");
+                } else {
+                    user.setProvider("LOCAL");
+                }
+
+                return userRepository.save(user);
+            }
+
             throw new RuntimeException("User already exists");
         }
 
@@ -37,6 +57,9 @@ public class UserService {
                 .email(email)
                 .passwordHash(passwordHash)
                 .application(app)
+                .provider("LOCAL")
+                .providerId(null)
+                .role(Role.ROLE_USER)
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -62,7 +85,8 @@ public class UserService {
         return jwtService.generateUserToken(
                 user.getId(),
                 app.getId(),
-                user.getEmail()
+                user.getEmail(),
+                user.getRole().name()
         );
 
     }

@@ -1,6 +1,7 @@
 package backend.auth.user.entity;
 
 import backend.application.entity.Application;
+import backend.developer.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,8 +28,12 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String passwordHash;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     // Multi-tenant link
     @ManyToOne(optional = false)
@@ -36,4 +41,7 @@ public class User {
     private Application application;
 
     private LocalDateTime createdAt;
+
+    private String provider;   // LOCAL / GOOGLE
+    private String providerId; // Google user ID
 }

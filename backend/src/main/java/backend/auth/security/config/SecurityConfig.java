@@ -1,12 +1,11 @@
-package backend.security.config;
+package backend.auth.security.config;
 
-import backend.security.filter.JwtAuthenticationFilter;
-import backend.security.filter.UserJwtAuthenticationFilter;
+import backend.auth.security.filter.JwtAuthenticationFilter;
+import backend.auth.security.filter.UserJwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -34,7 +33,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/developers/signup",
                                 "/developers/login",
-                                "/auth/**"
+                                "/auth/**",
+                                "/oauth/**"
                         ).permitAll()
 
                         // Only DEVELOPERS can create apps

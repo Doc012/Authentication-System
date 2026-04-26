@@ -6,7 +6,7 @@ import backend.developer.dto.DeveloperResponse;
 import backend.developer.dto.DeveloperSignupRequest;
 import backend.developer.entity.Developer;
 import backend.developer.service.DeveloperService;
-import backend.security.jwt.JwtService;
+import backend.auth.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

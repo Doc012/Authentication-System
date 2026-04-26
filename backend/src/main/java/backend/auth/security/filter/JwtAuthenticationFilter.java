@@ -1,6 +1,6 @@
-package backend.security.filter;
+package backend.auth.security.filter;
 
-import backend.security.jwt.JwtService;
+import backend.auth.security.jwt.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +20,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+
+        return path.startsWith("/oauth")
+                || path.startsWith("/developers/login")
+                || path.startsWith("/developers/signup");
+    }
 
     @Override
     protected void doFilterInternal(

@@ -1,4 +1,4 @@
-package backend.security.jwt;
+package backend.auth.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -46,17 +46,35 @@ public class JwtService {
     }
 
     // Generate User Token
-    public String generateUserToken(UUID userId, UUID applicationId, String email){
+    public String generateUserToken(UUID userId, UUID applicationId, String email, String role){
         return Jwts.builder()
                 .setSubject(userId.toString())
                 .claim("applicationId", applicationId.toString())
                 .claim("email", email)
-                .claim("role", "ROLE_USER")
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 15)) // 15 minutes
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }
 
+    public String generateOAuthState(String apiKey) {
+
+        return Jwts.builder()
+                .claim("apiKey", apiKey)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 5 * 60 * 1000)) // 5 min
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String extractApiKeyFromState(String stateToken) {
+        try {
+            Claims claims = extractAllClaims(stateToken);
+            return claims.get("apiKey", String.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid or expired OAuth state");
+        }
     }
 
     // Extracting Developer ID from the token
@@ -105,11 +123,5 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody();
     }
-
-
-
-
-
-
 
 }

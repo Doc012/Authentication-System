@@ -1,11 +1,10 @@
-package backend.security.filter;
+package backend.auth.security.filter;
 
 import backend.application.entity.Application;
 import backend.application.repository.ApplicationRepository;
-import backend.security.jwt.JwtService;
+import backend.auth.security.jwt.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +24,15 @@ public class UserJwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final ApplicationRepository applicationRepository;
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+
+        return path.startsWith("/oauth")
+                || path.startsWith("/developers/login")
+                || path.startsWith("/developers/signup");
+    }
 
     @Override
     protected void doFilterInternal(
