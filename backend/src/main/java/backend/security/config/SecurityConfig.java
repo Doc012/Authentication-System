@@ -1,6 +1,7 @@
 package backend.security.config;
 
 import backend.security.filter.JwtAuthenticationFilter;
+import backend.security.filter.UserJwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final UserJwtAuthenticationFilter userJwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,7 +33,8 @@ public class SecurityConfig {
                     // PUBLIC endpoints
                         .requestMatchers(
                                 "/developers/signup",
-                                "/developers/login"
+                                "/developers/login",
+                                "/auth/**"
                         ).permitAll()
 
                         // Only DEVELOPERS can create apps
@@ -39,6 +42,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/applications/**").hasRole("DEVELOPER")
                         .requestMatchers(HttpMethod.PUT, "/applications/**").hasRole("DEVELOPER")
                         .requestMatchers(HttpMethod.DELETE, "/applications/**").hasRole("DEVELOPER")
+
+                        // Only USERS
+                        .requestMatchers(HttpMethod.POST, "/user/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/user/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/user/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("USER")
+
 
                         // Admin-only endpoints (future)
                         .requestMatchers("/admin/**").hasRole("ADMIN")
@@ -48,7 +58,10 @@ public class SecurityConfig {
                 )
 
                 .httpBasic(httpBasic -> httpBasic.disable()) // disabling basic auth
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);        return http.build();
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(userJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
 
     }
 

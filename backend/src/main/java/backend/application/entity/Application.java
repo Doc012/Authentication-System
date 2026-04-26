@@ -24,6 +24,15 @@ public class Application {
 
     private String description;
 
+    @Column(unique = true, nullable = false)
+    private String apiKey;
+
+    @Column(unique = true, nullable = false)
+    private String clientId;
+
+    @Column(nullable =false)
+    private String clientSecretHash;
+
     @Column(name = "created_at")
     private LocalDateTime created_at;
 

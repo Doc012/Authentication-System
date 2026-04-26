@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ApplicationRepository extends JpaRepository<Application, UUID> {
-    List<Application> findByDeveloper(UUID developerId);
+    List<Application> findByDeveloperId(UUID developerId);
     Optional<Application> findByIdAndDeveloperId(UUID id, UUID developerId);
+
+    Optional<Application> findByApiKey(String apiKey);
 }

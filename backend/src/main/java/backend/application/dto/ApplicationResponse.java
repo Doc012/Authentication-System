@@ -10,4 +10,7 @@ import java.util.UUID;
 public class ApplicationResponse {
     private UUID id;
     private String name;
+    private String apiKey;
+    private String clientId;
+    private String clientSecret;
 }

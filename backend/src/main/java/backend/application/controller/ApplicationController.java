@@ -30,6 +30,9 @@ public class ApplicationController {
         return ApplicationResponse.builder()
                 .id(app.getId())
                 .name(app.getName())
+                .apiKey(app.getApiKey())
+                .clientId(app.getClientId())
+                .clientSecret(app.getClientSecretHash())
                 .build();
     }
 
@@ -41,6 +44,9 @@ public class ApplicationController {
                 .map(app -> ApplicationResponse.builder()
                         .id(app.getId())
                         .name(app.getName())
+                        .apiKey(app.getApiKey())
+                        .clientId(app.getClientId())
+                        .clientSecret(app.getClientSecretHash())
                         .build())
                 .toList();
     }
