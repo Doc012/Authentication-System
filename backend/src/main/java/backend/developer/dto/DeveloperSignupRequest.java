@@ -7,9 +7,9 @@ import lombok.Data;
 @Data
 public class DeveloperSignupRequest {
     @Email
-    @NotBlank
+    @NotBlank(message = "Email cannot be empty")
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "Password can not be empty")
     private String password;
 }

@@ -63,7 +63,7 @@ public class JwtService {
         return Jwts.builder()
                 .claim("apiKey", apiKey)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 5 * 60 * 1000)) // 5 min
+                .setExpiration(new Date(System.currentTimeMillis() + 30 * 60 * 1000)) // 5 min
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -73,6 +73,7 @@ public class JwtService {
             Claims claims = extractAllClaims(stateToken);
             return claims.get("apiKey", String.class);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("Invalid or expired OAuth state");
         }
     }

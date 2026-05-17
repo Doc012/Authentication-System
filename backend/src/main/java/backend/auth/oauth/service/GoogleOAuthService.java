@@ -46,7 +46,7 @@ public class GoogleOAuthService {
 
     public String handleGoogleCallback(String code, String state) {
 
-        String apiKey = jwtService.extractApiKeyFromState(state); // 🔥 NEW
+        String apiKey = jwtService.extractApiKeyFromState(state); // NEW
 
         String accessToken = exchangeCodeForToken(code);
         GoogleUserInfo userInfo = fetchUserInfo(accessToken);
@@ -77,14 +77,16 @@ public class GoogleOAuthService {
         HttpEntity<MultiValueMap<String, String>> request =
                 new HttpEntity<>(body, headers);
 
-        ResponseEntity<Map> response = restTemplate.postForEntity(
+        ResponseEntity<Map> response = restTemplate.exchange(
                 "https://oauth2.googleapis.com/token",
+                HttpMethod.POST,
                 request,
                 Map.class
         );
 
         return (String) response.getBody().get("access_token");
     }
+
     private GoogleUserInfo fetchUserInfo(String accessToken) {
 
         RestTemplate restTemplate = new RestTemplate();
